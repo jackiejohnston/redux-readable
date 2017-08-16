@@ -1,6 +1,6 @@
 # Readable
 
-This is an app built with React/Redux that allows users to post
+This is an app built with React/Redux that allows users to post, comment and up-vote.
 
 ## Step 1: Download
 

@@ -27,16 +27,18 @@ function reads (state = initialState, action) {
     case ADD_POST :
       return {
         ...state,
-        posts.push({
-          id: generateUUID(),
-          timestamp: Date.now(),
-          title: action.title,
-          body: action.body,
-          author: action.author,
-          category: action.category,
-          voteScore: 0,
-          deleted: false
-        })
+        posts: [...state.posts,
+          {
+            id: generateUUID(),
+            timestamp: Date.now(),
+            title: action.title,
+            body: action.body,
+            author: action.author,
+            category: action.category,
+            voteScore: 0,
+            deleted: false
+          }
+        ]
       }
     case UPDATE_POST :
       return {}

@@ -17,17 +17,15 @@ export const DELETE_COMMENT = 'DELETE_COMMENT'
 // timestamp - timestamp in whatever format you like, you can use Date.now() if you like
 // title - String
 // body - String
-// owner - String
+// author - String
 // category: Any of the categories listed in categories.js. Feel free to extend this list as you desire.
 
-export function addPost ({ id, timestamp, title, body, owner, category }) {
+export function addPost ({ title, body, author, category }) {
   return {
     type: ADD_POST,
-    id,
-    timestamp,
     title,
     body,
-    owner,
+    author,
     category,
   }
 }
@@ -89,16 +87,16 @@ export function deletePost ({ id }) {
 // id: Any unique ID. As with posts, UUID is probably the best here.
 // timestamp: timestamp. Get this however you want.
 // body: String
-// owner: String
+// author: String
 // parentId: Should match a post id in the database.
 
-export function addComment ({ id, timestamp, body, owner, parentId }) {
+export function addComment ({ id, timestamp, body, author, parentId }) {
   return {
     type: ADD_COMMENT,
     id,
     timestamp,
     body,
-    owner,
+    author,
     parentId,
   }
 }

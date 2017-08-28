@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux'
+
 import {
   ADD_POST,
   UPDATE_POST,
@@ -9,45 +11,55 @@ import {
   DELETE_COMMENT,
 } from '../actions'
 
-const initialState = {
-  posts: [],
-  comments: []
-}
-
 function generateUUID() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   )
 }
 
-function reads (state = initialState, action) {
-  const { title, body, author, category, option, parentId } = action
+function posts (state = {}, action) {
+  const { title, body, author, category, option } = action
 
   switch (action.type) {
     case ADD_POST :
+      const { post } = action
       return {
         ...state,
-        posts: [...state.posts,
-          {
-            id: generateUUID(),
-            timestamp: Date.now(),
-            title: action.title,
-            body: action.body,
-            author: action.author,
-            category: action.category,
-            voteScore: 0,
-            deleted: false
-          }
-        ]
+        [post.id]: post
       }
+      //     {
+      //       id: generateUUID(),
+      //       timestamp: Date.now(),
+      //       title: action.title,
+      //       body: action.body,
+      //       author: action.author,
+      //       category: action.category,
+      //       voteScore: 0,
+      //       deleted: false
+      //     }
+      //   ]
+      // }
     case UPDATE_POST :
       return {}
     case VOTE_ON_POST :
       return {}
     case DELETE_POST :
       return {}
+    default:
+      return state
+  }
+}
+
+function comments (state = {}, action) {
+  const { body, author, option, parentId } = action
+
+  switch (action.type) {
     case ADD_COMMENT :
-      return {}
+      const { comment } = action
+      return {
+        ...state,
+        [comment.id]: comment
+      }
     case UPDATE_COMMENT :
       return {}
     case VOTE_ON_COMMENT :
@@ -60,4 +72,7 @@ function reads (state = initialState, action) {
 }
 
 
-export default reads
+export default combineReducers({
+  posts,
+  comments,
+});

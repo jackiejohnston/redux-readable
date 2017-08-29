@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Route, Switch, Redirect } from 'react-router-dom'
+import { withRouter, Link, Route, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addPost, updatePost } from '../actions'
 import * as ReadableAPI from '../utils/api.js'
@@ -28,33 +28,36 @@ class App extends React.Component {
 
 
     return (
-      <div>
-        <Switch>
-          <Route exact path='/' render={() => (
-            <div>
-              <h1>Home</h1>
-              <ul>
+      <div className='container'>
+        <div className='row'>
+          <div className='col-xs-12'>
+            <Switch>
+              <Route exact path='/' render={() => (
+                <div>
+                  <h1>Home</h1>
+                  <ul>
+                  {categories.map(category => (
+                    <li key={category.name}>
+                      <Link to={`/${category.path}`}>{category.name}</Link>
+                    </li>
+                  ))}
+                  </ul>
+                </div>
+              )}/>
+
+
               {categories.map(category => (
-                <li key={category.name}>
-                  <Link to={`/${category.path}`}>{category.name}</Link>
-                </li>
+                <Route key={category.name} exact path={`/${category.path}`} render={() => (
+                  <div>
+                    <h1>{category.name}</h1>
+                  </div>
+                )}/>
               ))}
-              </ul>
-            </div>
-          )}/>
 
 
-          {categories.map(category => (
-            <Route key={category.name} exact path={`/${category.path}`} render={() => (
-              <div>
-                <h1>{category.name}</h1>
-              </div>
-            )}/>
-          ))}
-
-
-        </Switch>
-
+            </Switch>
+          </div>
+        </div>
       </div>
     )
   }
@@ -74,7 +77,9 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+)

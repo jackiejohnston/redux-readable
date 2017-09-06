@@ -6,6 +6,7 @@ import App from './components/App'
 import registerServiceWorker from './registerServiceWorker'
 import { createStore, applyMiddleware, compose } from 'redux'
 import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 import reducer from './reducers'
 import { Provider } from 'react-redux'
 
@@ -14,10 +15,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   reducer,
   composeEnhancers(
-    applyMiddleware(logger)
+    applyMiddleware(logger, thunk)
   )
 )
-// console.log(store.getState())
 
 ReactDOM.render(
   <BrowserRouter>

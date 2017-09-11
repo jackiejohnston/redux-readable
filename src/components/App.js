@@ -1,20 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { withRouter, Link, Route, Switch, Redirect } from 'react-router-dom'
+// import PropTypes from 'prop-types'
+import { withRouter, Link, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { selectCategory, fetchPostsIfNeeded } from '../actions'
+import { selectCategory, selectPost, fetchPostsIfNeeded, fetchCommentsIfNeeded, voteOnPost } from '../actions'
 import * as ReadableAPI from '../utils/api.js'
 import Posts from './Posts.js'
+import Post from './Post.js'
+import Comments from './Comments.js'
 
 
 class App extends React.Component {
 
-  static propTypes = {
-    selectedCategory: PropTypes.string.isRequired,
-    posts: PropTypes.array.isRequired,
-    isFetching: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired
-  }
+  // static propTypes = {
+  //   selectedCategory: PropTypes.string.isRequired,
+  //   posts: PropTypes.array.isRequired,
+  //   isFetching: PropTypes.bool.isRequired,
+  //   dispatch: PropTypes.func.isRequired
+  // }
 
   state = {
     categories: []
@@ -34,13 +36,18 @@ class App extends React.Component {
   }
 
   getCategoryFromPath(path) {
-    switch(path) {
-      case '/':
-        return 'all'
-        break
-      default:
-        return path.replace('/','')
-
+    const { dispatch, selectedPost } = this.props
+    if (path === "/") {
+      return "all"
+    } else if (path.split("/").length === 2) {
+      dispatch(selectPost(null))
+      return path.split("/")[1]
+    } else {
+      // get comments, filter posts, show details
+      const postID = path.split("/")[2]
+      dispatch(selectPost(postID))
+      dispatch(fetchCommentsIfNeeded(selectedPost))
+      return path.split("/")[1]
     }
   }
 
@@ -53,7 +60,7 @@ class App extends React.Component {
 
   render() {
     const { categories } = this.state
-    const { selectedCategory, posts, isFetching, dispatch } = this.props
+    const { posts, comments, isFetching, isFetchingComments, selectedPost, dispatch } = this.props
     const isEmpty = posts.length === 0
     dispatch(selectCategory(this.getCategoryFromPath(this.props.location.pathname)))
 
@@ -78,12 +85,13 @@ class App extends React.Component {
         </div>
         <div className="container">
           <div className="row">
-            <div className="col-xs-12">
+            <div className="col">
 
               <Switch>
                 <Route exact path='/' render={() => (
                   <div>
                     <h1 className="mb-4">All Posts</h1>
+                    <Posts posts={posts}  />
                   </div>
                 )}/>
 
@@ -92,20 +100,30 @@ class App extends React.Component {
                   <Route key={category.name} exact path={`/${category.path}`} render={() => (
                     <div>
                       <h1 className="text-capitalize mb-4">{category.name} Posts</h1>
+                      <Posts posts={posts}  />
                     </div>
                   )}/>
                 ))}
 
 
+                {posts.filter(post=>post.deleted === false).map((post, i) =>
+                  <Route key={post.id} exact path={`/${post.category}/${post.id}`}
+                  render={() => (
+                    <div>
+                      <h1 className="text-capitalize mb-4">{post.title}</h1>
+                      <Post post={post} comments={comments}  />
+                    </div>
+                  )}/>
+                )}
+
               </Switch>
 
 
               {isEmpty
-                ? (isFetching ? <h4>Loading...</h4> : <h4>Empty.</h4>)
-                : <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-                    <Posts posts={posts} />
-                  </div>
+                ? (isFetching ? <h6>Loading...</h6> : <h6>Empty.</h6>)
+                : <span></span>
               }
+
             </div>
           </div>
         </div>
@@ -125,7 +143,7 @@ class App extends React.Component {
 
 
 const mapStateToProps = state => {
-  const { selectedCategory, postsByCategory } = state
+  const { selectedCategory, selectedPost, postsByCategory, commentsByPost } = state
   const {
     isFetching,
     items: posts
@@ -133,11 +151,21 @@ const mapStateToProps = state => {
     isFetching: true,
     items: []
   }
+  const {
+    isFetchingComments,
+    items: comments
+  } = commentsByPost[selectedPost] || {
+    isFetchingComments: true,
+    items: []
+  }
 
   return {
     selectedCategory,
+    selectedPost,
     posts,
-    isFetching
+    comments,
+    isFetching,
+    isFetchingComments
   }
 }
 

@@ -2,16 +2,26 @@ const api = 'http://localhost:5001'
 const key = 'whatever-you-want'
 const headers = {
   'Accept': 'application/json',
-  'Authorization': key
+  'Authorization': key,
+  'Content-Type': 'application/json',
 }
 
 export const REQUEST_POSTS = 'REQUEST_POSTS'
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
+export const REQUEST_COMMENTS = 'REQUEST_COMMENTS'
+export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
 export const SELECT_CATEGORY = 'SELECT_CATEGORY'
+export const SELECT_POST = 'SELECT_POST'
+export const RECORD_POST_VOTE = 'RECORD_POST_VOTE'
 
 export const selectCategory = category => ({
   type: SELECT_CATEGORY,
   category
+})
+
+export const selectPost = postID => ({
+  type: SELECT_POST,
+  postID
 })
 
 export const requestPosts = category => ({
@@ -22,15 +32,46 @@ export const requestPosts = category => ({
 export const receivePosts = (category, data) => ({
   type: RECEIVE_POSTS,
   category,
-  posts: data.map( post => { return post }),
-  receivedAt: Date.now()
+  posts: data.map( post => { return post })
 })
+
+export const requestComments = postID => ({
+  type: REQUEST_COMMENTS,
+  postID
+})
+
+export const receiveComments = (postID, data) => ({
+  type: RECEIVE_COMMENTS,
+  postID,
+  comments: data.map( comment => { return comment })
+})
+
+export const recordPostVote = post => ({
+  type: RECORD_POST_VOTE,
+  post
+})
+
+export const voteOnPost = (post, vote) => dispatch => {
+  return fetch(`${api}/posts/${post.id}`, { headers, method: 'POST', body: JSON.stringify({"option": vote}) })
+  .then(response => response.json())
+  .then(data => console.log(data))
+}
+
 
 const fetchPosts = category => dispatch => {
   dispatch(requestPosts(category))
   return fetch(category === "all" ? `${api}/posts` : `${api}/${category}/posts`, { headers })
     .then(response => response.json())
     .then(data => dispatch(receivePosts(category, data)))
+}
+
+
+
+const fetchComments = postID => dispatch => {
+  dispatch(requestComments(postID))
+  return fetch(`${api}/posts/${postID}/comments`, { headers })
+  .then(response => response.json())
+  .then(data => dispatch(receiveComments(postID, data)))
 }
 
 const shouldFetchPosts = (state, category) => {
@@ -41,12 +82,27 @@ const shouldFetchPosts = (state, category) => {
   if (posts.isFetching) {
     return false
   }
-  return posts.didInvalidate
+}
+
+const shouldFetchComments = (state, postID) => {
+  const comments = state.commentsByPost[postID]
+  if (!comments) {
+    return true
+  }
+  if (comments.isFetchingComments) {
+    return false
+  }
 }
 
 export const fetchPostsIfNeeded = category => (dispatch, getState) => {
   if (shouldFetchPosts(getState(), category)) {
     return dispatch(fetchPosts(category))
+  }
+}
+
+export const fetchCommentsIfNeeded = postID => (dispatch, getState) => {
+  if (shouldFetchComments(getState(), postID)) {
+    return dispatch(fetchComments(postID))
   }
 }
 

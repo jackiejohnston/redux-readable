@@ -6,269 +6,88 @@ const headers = {
   'Content-Type': 'application/json',
 }
 
-export const REQUEST_POSTS = 'REQUEST_POSTS'
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-export const REQUEST_COMMENTS = 'REQUEST_COMMENTS'
-export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
-export const SELECT_CATEGORY = 'SELECT_CATEGORY'
-export const SELECT_POST = 'SELECT_POST'
-export const RECORD_POST_VOTE = 'RECORD_POST_VOTE'
+// GET /categories
+// USAGE:
+// Get all of the categories available for the app. List is found in categories.js. Feel free to extend this list as you desire.
 
-export const selectCategory = category => ({
-  type: SELECT_CATEGORY,
-  category
-})
-
-export const selectPost = postID => ({
-  type: SELECT_POST,
-  postID
-})
-
-export const requestPosts = category => ({
-  type: REQUEST_POSTS,
-  category
-})
-
-export const receivePosts = (category, data) => ({
-  type: RECEIVE_POSTS,
-  category,
-  posts: data.map( post => { return post })
-})
-
-export const requestComments = postID => ({
-  type: REQUEST_COMMENTS,
-  postID
-})
-
-export const receiveComments = (postID, data) => ({
-  type: RECEIVE_COMMENTS,
-  postID,
-  comments: data.map( comment => { return comment })
-})
-
-export const recordPostVote = post => ({
-  type: RECORD_POST_VOTE,
-  post
-})
-
-export const voteOnPost = (post, vote) => dispatch => {
-  return fetch(`${api}/posts/${post.id}`, { headers, method: 'POST', body: JSON.stringify({"option": vote}) })
-  .then(response => response.json())
-  .then(data => console.log(data))
-}
-
-
-const fetchPosts = category => dispatch => {
-  dispatch(requestPosts(category))
-  return fetch(category === "all" ? `${api}/posts` : `${api}/${category}/posts`, { headers })
-    .then(response => response.json())
-    .then(data => dispatch(receivePosts(category, data)))
-}
-
-
-
-const fetchComments = postID => dispatch => {
-  dispatch(requestComments(postID))
-  return fetch(`${api}/posts/${postID}/comments`, { headers })
-  .then(response => response.json())
-  .then(data => dispatch(receiveComments(postID, data)))
-}
-
-const shouldFetchPosts = (state, category) => {
-  const posts = state.postsByCategory[category]
-  if (!posts) {
-    return true
-  }
-  if (posts.isFetching) {
-    return false
+export function fetchCategoriesHasError(bool) {
+  return {
+    type: 'FETCH_CATEGORIES_HAS_ERROR',
+    categoriesHasError: bool
   }
 }
 
-const shouldFetchComments = (state, postID) => {
-  const comments = state.commentsByPost[postID]
-  if (!comments) {
-    return true
-  }
-  if (comments.isFetchingComments) {
-    return false
+export function fetchCategoriesIsLoading(bool) {
+  return {
+    type: 'FETCH_CATEGORIES_IS_LOADING',
+    categoriesAreLoading: bool
   }
 }
 
-export const fetchPostsIfNeeded = category => (dispatch, getState) => {
-  if (shouldFetchPosts(getState(), category)) {
-    return dispatch(fetchPosts(category))
+export function fetchCategoriesHasSuccess(categories) {
+  return {
+    type: 'FETCH_CATEGORIES_HAS_SUCCESS',
+    categories
   }
 }
 
-export const fetchCommentsIfNeeded = postID => (dispatch, getState) => {
-  if (shouldFetchComments(getState(), postID)) {
-    return dispatch(fetchComments(postID))
+export function categoriesFetchData() {
+  return (dispatch) => {
+    dispatch(fetchCategoriesIsLoading(true));
+    fetch(`${api}/categories`, { headers })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        dispatch(fetchCategoriesIsLoading(false))
+        return response
+      })
+      .then((response) => response.json())
+      .then((data) => dispatch(fetchCategoriesHasSuccess(data.categories)))
+      .catch(() => dispatch(fetchCategoriesHasError(true)))
   }
 }
 
 
-
-// import * as ReadableAPI from '../utils/api.js'
-// export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-
-// export const ADD_POST = 'ADD_POST'
-// export const UPDATE_POST = 'UPDATE_POST'
-// export const VOTE_ON_POST = 'VOTE_ON_POST'
-// export const DELETE_POST = 'DELETE_POST'
-
-// export const ADD_COMMENT = 'ADD_COMMENT'
-// export const UPDATE_COMMENT = 'UPDATE_COMMENT'
-// export const VOTE_ON_COMMENT = 'VOTE_ON_COMMENT'
-// export const DELETE_COMMENT = 'DELETE_COMMENT'
+// GET /posts
+// USAGE:
+// Get all of the posts. Useful for the main page when no category is selected.
 
 
-// // GET /categories
-// // USAGE:
-// // Get all of the categories available for the app. List is found in categories.js. Feel free to extend this list as you desire.
+export function fetchPostsHasError(bool) {
+  return {
+    type: 'FETCH_POSTS_HAS_ERROR',
+    postsHasError: bool
+  }
+}
 
-// export const receivePosts = posts => ({
-//   type: RECEIVE_POSTS,
-//   posts:
-// })
+export function fetchPostsIsLoading(bool) {
+  return {
+    type: 'FETCH_POSTS_IS_LOADING',
+    postsAreLoading: bool
+  }
+}
 
-// export const fetchPosts = () => dispatch => (
-//   ReadableAPI
-//     .fetchPosts()
-//     .then(posts => dispatch(receivePosts(posts)))
-// )
+export function fetchPostsHasSuccess(posts) {
+  return {
+    type: 'FETCH_POSTS_HAS_SUCCESS',
+    posts
+  }
+}
 
-// // POST /posts
-// // USAGE:
-// // Add a new post
-
-// // PARAMS:
-// // id - UUID should be fine, but any unique id will work
-// // timestamp - timestamp in whatever format you like, you can use Date.now() if you like
-// // title - String
-// // body - String
-// // author - String
-// // category: Any of the categories listed in categories.js. Feel free to extend this list as you desire.
-
-// export function addPost ({ title, body, author, category }) {
-//   return {
-//     type: ADD_POST,
-//     title,
-//     body,
-//     author,
-//     category,
-//   }
-// }
-
-
-// // POST /posts/:id
-// // USAGE:
-// // Used for voting on a post
-
-// // PARAMS:
-// // option - String: Either "upVote" or "downVote"
-
-// export function voteOnPost ({ id, option }) {
-//   return {
-//     type: VOTE_ON_POST,
-//     id,
-//     option,
-//   }
-// }
-
-// // PUT /posts/:id
-// // USAGE:
-// // Edit the details of an existing post
-
-// // PARAMS:
-// // title - String
-// // body - String
-
-// // ??? add timestamp ???
-
-// export function updatePost ({ id, title, body }) {
-//   return {
-//     type: UPDATE_POST,
-//     id,
-//     title,
-//     body,
-//   }
-// }
-
-
-// // DELETE /posts/:id
-// // USAGE:
-// // Sets the deleted flag for a post to 'true'.
-// // Sets the parentDeleted flag for all child comments to 'true'.
-
-// export function deletePost ({ id }) {
-//   return {
-//     type: DELETE_POST,
-//     id,
-//   }
-// }
-
-
-// // POST /comments
-// // USAGE:
-// // Add a comment to a post
-
-// // PARAMS:
-// // id: Any unique ID. As with posts, UUID is probably the best here.
-// // timestamp: timestamp. Get this however you want.
-// // body: String
-// // author: String
-// // parentId: Should match a post id in the database.
-
-// export function addComment ({ id, timestamp, body, author, parentId }) {
-//   return {
-//     type: ADD_COMMENT,
-//     id,
-//     timestamp,
-//     body,
-//     author,
-//     parentId,
-//   }
-// }
-
-
-// // POST /comments/:id
-// // USAGE:
-// // Used for voting on a comment.
-
-// export function voteOnComment ({ id, option }) {
-//   return {
-//     type: VOTE_ON_COMMENT,
-//     id,
-//     option,
-//   }
-// }
-
-
-// // PUT /comments/:id
-// // USAGE:
-// // Edit the details of an existing comment
-
-// // PARAMS:
-// // timestamp: timestamp. Get this however you want.
-// // body: String
-
-// export function updateComment ({ id, body, timestamp }) {
-//   return {
-//     type: UPDATE_POST,
-//     id,
-//     body,
-//     timestamp,
-//   }
-// }
-
-
-// // DELETE /comments/:id
-// // USAGE:
-// // Sets a comment's deleted flag to 'true'
-
-// export function deleteComment ({ id }) {
-//   return {
-//     type: DELETE_COMMENT,
-//     id,
-//   }
-// }
+export function postsFetchData() {
+  return (dispatch) => {
+    dispatch(fetchPostsIsLoading(true));
+    fetch(`${api}/posts`, { headers })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        dispatch(fetchPostsIsLoading(false))
+        return response
+      })
+      .then((response) => response.json())
+      .then((data) => dispatch(fetchPostsHasSuccess(data)))
+      .catch(() => dispatch(fetchPostsHasError(true)))
+  }
+}

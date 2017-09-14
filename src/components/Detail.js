@@ -24,7 +24,7 @@ class Detail extends React.Component {
           <span className="mx-2">/</span>
           Post
         </p>
-        <h1 className="mb-4 text-capitalize">Post</h1>
+        <h1 className="my-4 text-capitalize">Post</h1>
         {postsHasError ?
           <span>There was an error loading the posts.</span>
           : <span></span> }

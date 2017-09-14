@@ -16,7 +16,7 @@ class Home extends React.Component {
     return (
       <div>
         <p className="small">Home</p>
-        <h1 className="mb-4">All Posts</h1>
+        <h1 className="my-4">All Posts</h1>
         {postsHasError ?
           <span>There was an error loading the posts.</span>
           : <span></span> }

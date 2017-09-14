@@ -21,7 +21,7 @@ class Category extends React.Component {
           <span className="mx-2">/</span>
           {category}
         </p>
-        <h1 className="mb-4 text-capitalize">{category} Posts</h1>
+        <h1 className="my-4 text-capitalize">{category} Posts</h1>
         {postsHasError ?
           <span>There was an error loading the posts.</span>
           : <span></span> }

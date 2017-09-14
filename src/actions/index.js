@@ -32,7 +32,7 @@ export function fetchCategoriesHasSuccess(categories) {
 
 export function categoriesFetchData() {
   return (dispatch) => {
-    dispatch(fetchCategoriesIsLoading(true));
+    dispatch(fetchCategoriesIsLoading(true))
     fetch(`${api}/categories`, { headers })
       .then((response) => {
         if (!response.ok) {
@@ -75,7 +75,7 @@ export function fetchPostsHasSuccess(posts) {
 
 export function postsFetchData() {
   return (dispatch) => {
-    dispatch(fetchPostsIsLoading(true));
+    dispatch(fetchPostsIsLoading(true))
     fetch(`${api}/posts`, { headers })
       .then((response) => {
         if (!response.ok) {
@@ -93,13 +93,6 @@ export function postsFetchData() {
 
 // GET /posts/:id/comments
 // Get all the comments for a single post.
-
-export function setSelectedPostID(post_id) {
-  return {
-    type: 'SET_SELECTED_POST_ID',
-    selectedPostID: post_id
-  }
-}
 
 
 export function fetchCommentsHasError(bool) {
@@ -123,10 +116,11 @@ export function fetchCommentsHasSuccess(comments) {
   }
 }
 
-export function commentsFetchData() {
+export function commentsFetchData(post_id) {
   return (dispatch, getState) => {
-    dispatch(fetchCommentsIsLoading(true));
-    fetch(`${api}/posts/${getState().setSelectedPostID}/comments`, { headers })
+    console.log(">>>>>>>>>>>ID",post_id)
+    dispatch(fetchCommentsIsLoading(true))
+    fetch(`${api}/posts/${post_id}/comments`, { headers })
       .then((response) => {
         if (!response.ok) {
           throw Error(response.statusText)

@@ -7,8 +7,7 @@ const headers = {
 }
 
 // GET /categories
-// USAGE:
-// Get all of the categories available for the app. List is found in categories.js. Feel free to extend this list as you desire.
+// Get all of the categories available for the app.
 
 export function fetchCategoriesHasError(bool) {
   return {
@@ -50,7 +49,6 @@ export function categoriesFetchData() {
 
 
 // GET /posts
-// USAGE:
 // Get all of the posts. Useful for the main page when no category is selected.
 
 
@@ -89,5 +87,55 @@ export function postsFetchData() {
       .then((response) => response.json())
       .then((data) => dispatch(fetchPostsHasSuccess(data)))
       .catch(() => dispatch(fetchPostsHasError(true)))
+  }
+}
+
+
+// GET /posts/:id/comments
+// Get all the comments for a single post.
+
+export function setSelectedPostID(post_id) {
+  return {
+    type: 'SET_SELECTED_POST_ID',
+    selectedPostID: post_id
+  }
+}
+
+
+export function fetchCommentsHasError(bool) {
+  return {
+    type: 'FETCH_COMMENTS_HAS_ERROR',
+    commentsHasError: bool
+  }
+}
+
+export function fetchCommentsIsLoading(bool) {
+  return {
+    type: 'FETCH_COMMENTS_IS_LOADING',
+    commentsAreLoading: bool
+  }
+}
+
+export function fetchCommentsHasSuccess(comments) {
+  return {
+    type: 'FETCH_COMMENTS_HAS_SUCCESS',
+    comments
+  }
+}
+
+export function commentsFetchData() {
+  return (dispatch, getState) => {
+    dispatch(fetchCommentsIsLoading(true));
+    fetch(`${api}/posts/${getState().setSelectedPostID}/comments`, { headers })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        dispatch(fetchCommentsIsLoading(false))
+        return response
+      })
+      .then((response) => response.json())
+      .then((data) => dispatch(fetchCommentsHasSuccess(data)))
+      .catch(() => dispatch(fetchCommentsHasError(true)))
   }
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import Moment from 'react-moment'
 import { postsFetchData } from '../actions'
+import Post from './Post'
 
 class Home extends React.Component {
 
@@ -15,6 +15,7 @@ class Home extends React.Component {
     const { posts, postsHasError, postsAreLoading } = this.props
     return (
       <div>
+        <p className="small">Home</p>
         <h1 className="mb-4">All Posts</h1>
         {postsHasError ?
           <span>There was an error loading the posts.</span>
@@ -24,38 +25,7 @@ class Home extends React.Component {
           :
           <dl>
           {posts.filter(post=>post.deleted === false).map((post, i) =>
-            <div key={i} className="row mb-4">
-              <dt className="col-sm-4 col-md-3 text-center text-nowrap">
-                <button className="btn btn-link">
-                  <i className="fa fa-arrow-circle-up" aria-hidden="true"></i>
-                </button>
-                {post.voteScore} votes
-                <button className="btn btn-link">
-                  <i className="fa fa-arrow-circle-down" aria-hidden="true"></i>
-                </button>
-              </dt>
-              <dd className="col-sm-8 col-md-9">
-                <strong>
-                  <Link to={`/${post.category}/${post.id}`}>{post.title}</Link>
-                </strong> &mdash; {post.body}
-                <span className="badge badge-pill badge-warning ml-1 align-middle mb-1">
-                  # comments
-                </span>
-                <button className="btn btn-link">
-                  <i className="fa fa-pencil" aria-hidden="true"></i>
-                </button>
-                <button className="btn btn-link">
-                  <i className="fa fa-trash-o" aria-hidden="true"></i>
-                </button>
-                <br />
-                <small className="text-muted">
-                  Submitted by <strong>{post.author}</strong> on <Moment format="MM/DD/YYYY">{post.timestamp}</Moment>
-                </small>
-                <dl>
-                  Comments go here
-                </dl>
-              </dd>
-            </div>
+            <Post key={post.id} post={post} />
           )}
           </dl>
         }

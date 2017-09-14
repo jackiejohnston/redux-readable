@@ -6,6 +6,7 @@ import { categoriesFetchData } from '../actions'
 import Header from './Header'
 import Home from './Home'
 import Category from './Category'
+import Detail from './Detail'
 
 class App extends React.Component {
 
@@ -25,9 +26,8 @@ class App extends React.Component {
 
               <Switch>
                 <Route exact path='/' component={Home} />
-                {categories.map(category => (
-                  <Route key={category.name} exact path={`/${category.path}`} component={Category} />
-                ))}
+                <Route exact path="/:category" component={Category} />
+                <Route exact path="/:category/:post_id" component={Detail} />
               </Switch>
 
             </div>

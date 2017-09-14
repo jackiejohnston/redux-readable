@@ -5,23 +5,26 @@ import { connect } from 'react-redux'
 import { postsFetchData } from '../actions'
 import Post from './Post'
 
-class Category extends React.Component {
+class Detail extends React.Component {
 
   componentDidMount() {
     this.props.fetchPosts()
+    console.log(">>>>>>>>> DETAIL PROPS ", this.props)
   }
 
   render() {
     const { posts, postsHasError, postsAreLoading } = this.props
-    const { category } = this.props.match.params
+    const { category, post_id } = this.props.match.params
     return (
       <div>
         <p className="text-capitalize small">
           <Link to="/">Home</Link>
           <span className="mx-2">/</span>
-          {category}
+          <Link to={`/${category}`}>{category}</Link>
+          <span className="mx-2">/</span>
+          Post
         </p>
-        <h1 className="mb-4 text-capitalize">{category} Posts</h1>
+        <h1 className="mb-4 text-capitalize">Post</h1>
         {postsHasError ?
           <span>There was an error loading the posts.</span>
           : <span></span> }
@@ -29,9 +32,9 @@ class Category extends React.Component {
           <span>Loading&hellip;</span>
           :
           <dl>
-          {posts.filter(post=>post.deleted === false && post.category === category).map((post) =>
-            <Post key={post.id} post={post} />
-          )}
+            {posts.filter(post=>post.id === post_id).map((post) =>
+              <Post key={post.id} post={post} />
+            )}
           </dl>
         }
       </div>
@@ -39,7 +42,7 @@ class Category extends React.Component {
   }
 }
 
-Category.PropTypes = {
+Detail.PropTypes = {
   fetchPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
   postsHasError: PropTypes.bool.isRequired,
@@ -60,5 +63,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Category)
+  )(Detail)
 )

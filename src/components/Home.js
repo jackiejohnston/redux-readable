@@ -2,53 +2,46 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { postsFetchData } from '../actions'
+import { postsFetchData, postSortByScoreDesc } from '../actions'
 import Post from './Post'
 
 class Home extends React.Component {
 
   componentDidMount() {
+     console.log(">>>>>>>>> HOME PROPS ", this.props)
     this.props.fetchPosts();
   }
 
   render() {
-    const { posts, postsHasError, postsAreLoading } = this.props
+    const { posts, sortScoreHighestFirst } = this.props
     return (
       <div>
+        <button className="hidden-xs-up" onClick={(event) => sortScoreHighestFirst()}>Sort</button>
         <p className="small">Home</p>
         <h1 className="my-4">All Posts</h1>
-        {postsHasError ?
-          <span>There was an error loading the posts.</span>
-          : <span></span> }
-        {postsAreLoading ?
-          <span>Loading&hellip;</span>
-          :
-          <dl>
-          {posts.filter(post=>post.deleted === false).map((post, i) =>
-            <Post key={post.id} post={post} />
-          )}
-          </dl>
-        }
+        <dl>
+        {posts.filter(post=>post.deleted === false).map((post, i) =>
+          <Post key={post.id} post={post} />
+        )}
+        </dl>
       </div>
     )
   }
 }
 
 Home.PropTypes = {
+  sortScoreHighestFirst: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
-  postsHasError: PropTypes.bool.isRequired,
-  postsAreLoading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state) => ({
   posts: state.posts,
-  postsHasError: state.postsHasError,
-  postsAreLoading: state.postsAreLoading
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchPosts: () => dispatch(postsFetchData())
+  fetchPosts: () => dispatch(postsFetchData()),
+  sortScoreHighestFirst: () => dispatch(postSortByScoreDesc())
 })
 
 export default withRouter(

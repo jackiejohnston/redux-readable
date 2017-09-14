@@ -95,6 +95,39 @@ export function comments(state = [], action) {
   }
 }
 
+// Sorting functions
+
+// function sortByTimeAsc(a, b){
+//   var aTime = a.timestamp;
+//   var bTime = b.timestamp;
+//   return ((aTime < bTime) ? -1 : ((aTime > bTime) ? 1 : 0));
+// }
+// function sortByTimeDesc(a, b){
+//   var aTime = a.timestamp;
+//   var bTime = b.timestamp;
+//   return ((aTime > bTime) ? -1 : ((aTime < bTime) ? 1 : 0));
+// }
+// function sortByScoreAsc(a, b){
+//   var aScore = a.voteScore;
+//   var bScore = b.voteScore;
+//   return ((aScore < bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
+// }
+function sortByScoreDesc(a, b){
+  var aScore = a.voteScore;
+  var bScore = b.voteScore;
+  return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
+}
+
+export function postSortByScoreDesc(state = [], action) {
+  switch(action.type) {
+    case 'POST_SORT_BY_SCORE_DESC':
+      return action.posts.sort(sortByScoreDesc)
+    default:
+      return state
+  }
+}
+
+
 const rootReducer = combineReducers({
   categories,
   fetchCategoriesHasError,
@@ -105,6 +138,7 @@ const rootReducer = combineReducers({
   comments,
   fetchCommentsHasError,
   fetchCommentsIsLoading,
+  postSortByScoreDesc
 })
 
 export default rootReducer

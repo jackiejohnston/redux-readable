@@ -12,7 +12,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.fetchCategories()
-    console.log(">>>>>>>>> APP PROPS ", this.props)
+    // console.log(">>>>>>>>> APP PROPS ", this.props)
   }
 
   render() {

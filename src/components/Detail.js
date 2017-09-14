@@ -9,7 +9,7 @@ class Detail extends React.Component {
 
   componentDidMount() {
     this.props.fetchPosts()
-    console.log(">>>>>>>>> DETAIL PROPS ", this.props)
+    // console.log(">>>>>>>>> DETAIL PROPS ", this.props)
   }
 
   render() {

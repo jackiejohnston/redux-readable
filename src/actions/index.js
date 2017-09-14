@@ -6,6 +6,15 @@ const headers = {
   'Content-Type': 'application/json',
 }
 
+// Sorting functions
+
+export function postSortByScoreDesc(posts){
+  return {
+    type: 'POST_SORT_BY_SCORE_DESC',
+    posts
+  }
+}
+
 // GET /categories
 // Get all of the categories available for the app.
 
@@ -118,7 +127,6 @@ export function fetchCommentsHasSuccess(comments) {
 
 export function commentsFetchData(post_id) {
   return (dispatch, getState) => {
-    console.log(">>>>>>>>>>>ID",post_id)
     dispatch(fetchCommentsIsLoading(true))
     fetch(`${api}/posts/${post_id}/comments`, { headers })
       .then((response) => {

@@ -8,6 +8,7 @@ import Post from './Post'
 class Category extends React.Component {
 
   componentDidMount() {
+     // console.log(">>>>>>>>> CATEGORY PROPS ", this.props)
     this.props.fetchPosts()
   }
 

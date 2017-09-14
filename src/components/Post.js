@@ -8,8 +8,8 @@ import { commentsFetchData } from '../actions'
 class Post extends React.Component {
 
   componentDidMount() {
-    console.log(">>>>>>>>> POST PROPS ", this.props)
-    const { setPostID, fetchComments, post } = this.props
+    // console.log(">>>>>>>>> POST PROPS ", this.props)
+    const { fetchComments, post } = this.props
     fetchComments(post.id)
   }
 

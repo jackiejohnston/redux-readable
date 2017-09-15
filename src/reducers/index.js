@@ -112,20 +112,20 @@ export function comments(state = [], action) {
 //   var bScore = b.voteScore;
 //   return ((aScore < bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
 // }
-function sortByScoreDesc(a, b){
-  var aScore = a.voteScore;
-  var bScore = b.voteScore;
-  return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
-}
+// function sortByScoreDesc(a, b){
+//   var aScore = a.voteScore;
+//   var bScore = b.voteScore;
+//   return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
+// }
 
-export function postSortByScoreDesc(state = [], action) {
-  switch(action.type) {
-    case 'POST_SORT_BY_SCORE_DESC':
-      return action.posts.sort(sortByScoreDesc)
-    default:
-      return state
-  }
-}
+// export function postSortByScoreDesc(state = [], action) {
+//   switch(action.type) {
+//     case 'POST_SORT_BY_SCORE_DESC':
+//       return action.posts.sort(sortByScoreDesc)
+//     default:
+//       return state
+//   }
+// }
 
 
 const rootReducer = combineReducers({
@@ -138,7 +138,7 @@ const rootReducer = combineReducers({
   comments,
   fetchCommentsHasError,
   fetchCommentsIsLoading,
-  postSortByScoreDesc
+  // postSortByScoreDesc,
 })
 
 export default rootReducer

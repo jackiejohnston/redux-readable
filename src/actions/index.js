@@ -141,3 +141,47 @@ export function commentsFetchData(post_id) {
       .catch(() => dispatch(fetchCommentsHasError(true)))
   }
 }
+
+
+// POST /posts/:id
+// Used for voting on a post.
+// option - [String]: Either "upVote" or "downVote".
+
+export function voteOnPost(post,voteOption) {
+  return (dispatch) => {
+    fetch(`${api}/posts/${post.id}`, { headers, method: 'POST', body: JSON.stringify({"option": voteOption}) })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then((response) => response.json())
+      .then(() => {return dispatch(postsFetchData())})
+      .catch((response) => console.log("Error voting on post", response.statusText))
+  }
+}
+
+// POST /comments/:id
+// Used for voting on a comment.
+// option - [String]: Either "upVote" or "downVote".
+
+export function voteOnComment(comment,voteOption) {
+  return (dispatch) => {
+    fetch(`${api}/comments/${comment.id}`, { headers, method: 'POST', body: JSON.stringify({"option": voteOption}) })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then((response) => response.json())
+      .then(() => {return dispatch(commentsFetchData(comment.parentId))})
+      .catch((response) => console.log("Error voting on comment", response.statusText))
+  }
+}
+
+
+// DELETE /posts/:id
+// Sets the deleted flag for a post to 'true'.
+// Sets the parentDeleted flag for all child comments to 'true'.

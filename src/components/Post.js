@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment'
-import { commentsFetchData } from '../actions'
+import { commentsFetchData, voteOnPost, voteOnComment } from '../actions'
 
 class Post extends React.Component {
 
@@ -14,18 +14,18 @@ class Post extends React.Component {
   }
 
   render() {
-    const { post, comments } = this.props
+    const { post, comments, voteForPost, voteForComment } = this.props
     const { path } = this.props.match
     return (
       <div key={post.id} className="row mb-4">
         <dt className="col-sm-4 col-md-3 text-center text-nowrap">
-          <button className="btn btn-link px-2">
+          <button className="btn btn-link px-2" onClick={(event) => voteForPost(post,"upVote")}>
             <i className="fa fa-arrow-circle-up" aria-hidden="true"></i>
           </button>
           <span className="text-uppercase small">
             {post.voteScore} votes
           </span>
-          <button className="btn btn-link px-2">
+          <button className="btn btn-link px-2" onClick={(event) => voteForPost(post,"downVote")}>
             <i className="fa fa-arrow-circle-down" aria-hidden="true"></i>
           </button>
         </dt>
@@ -61,13 +61,13 @@ class Post extends React.Component {
             {comments.filter(comment=>comment.parentId === post.id && comment.deleted === false).map((comment, i) =>
               <div key={i} className="row mb-4">
                 <dt className="col-sm-4 col-md-3 text-center text-nowrap">
-                  <button className="btn btn-link px-2">
+                  <button className="btn btn-link px-2" onClick={(event) => voteForComment(comment,"upVote")}>
                     <i className="fa fa-arrow-circle-up" aria-hidden="true"></i>
                   </button>
                   <span className="text-uppercase small">
                     {comment.voteScore} votes
                   </span>
-                  <button className="btn btn-link px-2">
+                  <button className="btn btn-link px-2" onClick={(event) => voteForComment(comment,"downVote")}>
                     <i className="fa fa-arrow-circle-down" aria-hidden="true"></i>
                   </button>
                 </dt>
@@ -96,9 +96,11 @@ class Post extends React.Component {
 }
 
 Post.PropTypes = {
+  voteForPost: PropTypes.func.isRequired,
+  voteForComment: PropTypes.func.isRequired,
   fetchComments: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
-  comments: PropTypes.array.isRequired
+  comments: PropTypes.array.isRequiredqw
 }
 
 const mapStateToProps = (state) => ({
@@ -106,7 +108,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchComments: (data) => dispatch(commentsFetchData(data))
+  fetchComments: (data) => dispatch(commentsFetchData(data)),
+  voteForPost: (post,voteOption) => dispatch(voteOnPost(post,voteOption)),
+  voteForComment: (comment,voteOption) => dispatch(voteOnComment(comment,voteOption))
 })
 
 export default withRouter(

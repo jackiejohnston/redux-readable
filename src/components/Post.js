@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment'
-import { commentsFetchData, voteOnPost, voteOnComment } from '../actions'
+import { commentsFetchData, voteOnPost, voteOnComment, deleteComment, deletePost } from '../actions'
 
 class Post extends React.Component {
 
@@ -14,7 +14,7 @@ class Post extends React.Component {
   }
 
   render() {
-    const { post, comments, voteForPost, voteForComment } = this.props
+    const { post, comments, voteForPost, voteForComment, trashComment, trashPost } = this.props
     const { path } = this.props.match
     return (
       <div key={post.id} className="row mb-4">
@@ -46,7 +46,7 @@ class Post extends React.Component {
           <button className="btn btn-link px-2">
             <i className="fa fa-pencil" aria-hidden="true"></i>
           </button>
-          <button className="btn btn-link px-2">
+          <button className="btn btn-link px-2" onClick={(event) => trashPost(post)}>
             <i className="fa fa-trash-o" aria-hidden="true"></i>
           </button>
           {path === "/:category/:post_id" ?
@@ -78,7 +78,7 @@ class Post extends React.Component {
                   <button className="btn btn-link px-2">
                     <i className="fa fa-pencil" aria-hidden="true"></i>
                   </button>
-                  <button className="btn btn-link px-2">
+                  <button className="btn btn-link px-2" onClick={(event) => trashComment(comment)}>
                     <i className="fa fa-trash-o" aria-hidden="true"></i>
                   </button>
                   <br />
@@ -96,6 +96,8 @@ class Post extends React.Component {
 }
 
 Post.PropTypes = {
+  trashComment: PropTypes.func.isRequired,
+  trashPost: PropTypes.func.isRequired,
   voteForPost: PropTypes.func.isRequired,
   voteForComment: PropTypes.func.isRequired,
   fetchComments: PropTypes.func.isRequired,
@@ -110,7 +112,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchComments: (data) => dispatch(commentsFetchData(data)),
   voteForPost: (post,voteOption) => dispatch(voteOnPost(post,voteOption)),
-  voteForComment: (comment,voteOption) => dispatch(voteOnComment(comment,voteOption))
+  voteForComment: (comment,voteOption) => dispatch(voteOnComment(comment,voteOption)),
+  trashComment: (comment) => dispatch(deleteComment(comment)),
+  trashPost: (post) => dispatch(deletePost(post))
 })
 
 export default withRouter(

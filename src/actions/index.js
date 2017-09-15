@@ -8,12 +8,19 @@ const headers = {
 
 // Sorting functions
 
-export function postSortByScoreDesc(posts){
-  return {
-    type: 'POST_SORT_BY_SCORE_DESC',
-    posts
-  }
-}
+// export function postSortByScoreDesc(posts){
+//   return {
+//     type: 'POST_SORT_BY_SCORE_DESC',
+//     posts
+//   }
+// }
+
+
+// export function sortByScoreAndRefresh(posts) {
+//   return (dispatch) => {
+//     postSortByScoreDesc(posts).then(() => {return dispatch(postsFetchData())})
+//   }
+// }
 
 // GET /categories
 // Get all of the categories available for the app.
@@ -185,3 +192,36 @@ export function voteOnComment(comment,voteOption) {
 // DELETE /posts/:id
 // Sets the deleted flag for a post to 'true'.
 // Sets the parentDeleted flag for all child comments to 'true'.
+
+export function deletePost(post) {
+  return (dispatch) => {
+    fetch(`${api}/posts/${post.id}`, { headers, method: 'DELETE' })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then(() => {return dispatch(postsFetchData())})
+      .catch((response) => console.log("Error deleting post", response.statusText))
+  }
+}
+
+// DELETE /comments/:id
+// Sets a comment's deleted flag to true.
+
+export function deleteComment(comment) {
+  return (dispatch) => {
+    fetch(`${api}/comments/${comment.id}`, { headers, method: 'DELETE' })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then(() => console.log(">>>>>>>>>> comment.parentId:", comment.parentId))
+      // TODO Fix bug: This refresh isn't working
+      .then(() => {return dispatch(commentsFetchData(comment.parentId))})
+      .catch((response) => console.log("Error deleting comment comment", response.statusText))
+  }
+}

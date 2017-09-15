@@ -7,6 +7,7 @@ import Header from './Header'
 import Home from './Home'
 import Category from './Category'
 import Detail from './Detail'
+import AddPost from './AddPost'
 
 class App extends React.Component {
 
@@ -16,17 +17,18 @@ class App extends React.Component {
   }
 
   render() {
-    const { categories, categoriesHasError, categoriesAreLoading } = this.props
+    const { categories } = this.props
 
     return (
       <div>
-        <Header categories={categories} categoriesHasError={categoriesHasError} categoriesAreLoading={categoriesAreLoading} />
+        <Header categories={categories} />
         <div className="container">
           <div className="row">
             <div className="col">
 
               <Switch>
                 <Route exact path='/' component={Home} />
+                <Route exact path="/add-post" component={AddPost} />
                 <Route exact path="/:category" component={Category} />
                 <Route exact path="/:category/:post_id" component={Detail} />
               </Switch>
@@ -44,14 +46,10 @@ class App extends React.Component {
 App.PropTypes = {
   fetchCategories: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
-  categoriesHasError: PropTypes.bool.isRequired,
-  categoriesAreLoading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state) => ({
   categories: state.categories,
-  categoriesHasError: state.categoriesHasError,
-  categoriesAreLoading: state.categoriesAreLoading
 })
 
 const mapDispatchToProps = (dispatch) => ({

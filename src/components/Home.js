@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { postsFetchData, postSortByScoreDesc } from '../actions'
+import { postsFetchData } from '../actions'
 import Post from './Post'
 
 class Home extends React.Component {
@@ -30,7 +30,7 @@ class Home extends React.Component {
 }
 
 Home.PropTypes = {
-  sortScoreHighestFirst: PropTypes.func.isRequired,
+  // sortScoreHighestFirst: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
 }
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchPosts: () => dispatch(postsFetchData()),
-  sortScoreHighestFirst: () => dispatch(postSortByScoreDesc())
+  // sortScoreHighestFirst: () => dispatch(sortByScoreAndRefresh())
 })
 
 export default withRouter(

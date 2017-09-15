@@ -12,17 +12,14 @@ const Header = ({categories, categoriesHasError, categoriesAreLoading}) => (
         <Link className="navbar-brand" to="/">Readable</Link>
         <div className="collapse navbar-collapse" id="navbar">
           <div className="navbar-nav text-capitalize">
-            {categoriesHasError ?
-              <span>There was an error loading the categories.</span>
-              : <span></span> }
-            {categoriesAreLoading ?
-              <span>Loading&hellip;</span>
-              :
-              categories.map(category => (
+            {categories.map(category => (
                 <Link to={`/${category.path}`} key={category.name} className="nav-item nav-link">{category.name}</Link>
               ))
             }
           </div>
+        </div>
+        <div className="navbar-nav justify-content-end">
+          <Link to="/add-post" className="nav-item nav-link text-nowrap">Add Post</Link>
         </div>
       </nav>
     </div>
@@ -31,8 +28,6 @@ const Header = ({categories, categoriesHasError, categoriesAreLoading}) => (
 
 Header.PropTypes = {
   categories: PropTypes.array.isRequired,
-  categoriesHasError: PropTypes.bool.isRequired,
-  categoriesAreLoading: PropTypes.bool.isRequired
 }
 
 export default Header

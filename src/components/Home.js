@@ -2,14 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { postsFetchData } from '../actions'
+import { postsFetchData, readyForRedirectHome } from '../actions'
 import Post from './Post'
 
 class Home extends React.Component {
 
   componentDidMount() {
-     console.log(">>>>>>>>> HOME PROPS ", this.props)
-    this.props.fetchPosts();
+     // console.log(">>>>>>>>> HOME PROPS ", this.props)
+    this.props.fetchPosts()
+    this.props.resetRedirect()
   }
 
   render() {
@@ -31,6 +32,7 @@ class Home extends React.Component {
 
 Home.PropTypes = {
   // sortScoreHighestFirst: PropTypes.func.isRequired,
+  resetRedirect: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
 }
@@ -41,6 +43,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchPosts: () => dispatch(postsFetchData()),
+  resetRedirect: () => dispatch(readyForRedirectHome(false)),
   // sortScoreHighestFirst: () => dispatch(sortByScoreAndRefresh())
 })
 

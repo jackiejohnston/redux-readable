@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { routerReducer } from 'react-router-redux'
 
 // GET /categories
 // Get all of the categories available for the app.
@@ -96,6 +95,16 @@ export function comments(state = [], action) {
   }
 }
 
+// Redirect
+export function readyForRedirectHome(state = false, action) {
+  switch(action.type) {
+    case 'READY_FOR_REDIRECT_HOME':
+      return action.redirectHome
+    default:
+      return state
+  }
+}
+
 // Sorting functions
 
 // function sortByTimeAsc(a, b){
@@ -130,7 +139,6 @@ export function comments(state = [], action) {
 
 
 const rootReducer = combineReducers({
-  router: routerReducer,
   categories,
   fetchCategoriesHasError,
   fetchCategoriesIsLoading,
@@ -140,6 +148,7 @@ const rootReducer = combineReducers({
   comments,
   fetchCommentsHasError,
   fetchCommentsIsLoading,
+  readyForRedirectHome,
   // postSortByScoreDesc,
 })
 

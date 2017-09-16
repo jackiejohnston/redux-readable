@@ -236,6 +236,14 @@ export function deleteComment(comment) {
 // author - [String]
 // category - Any of the categories listed in categories.js. Feel free to extend this list as you desire.
 
+
+export function readyForRedirectHome(bool) {
+  return {
+    type: 'READY_FOR_REDIRECT_HOME',
+    redirectHome: bool
+  }
+}
+
 export function addPost(post) {
   return (dispatch) => {
     fetch(`${api}/posts`, { headers, method: 'POST', body: JSON.stringify(post) })
@@ -245,7 +253,7 @@ export function addPost(post) {
         }
         return response
       })
-      .then(() => {return dispatch(postsFetchData())})
+      .then(() => dispatch(readyForRedirectHome(true)))
       .catch((response) => console.log("Error deleting comment comment", response.statusText))
   }
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { categoriesFetchData, addPost } from '../actions'
-import { push } from 'react-router-redux'
+import { categoriesFetchData, addPost, readyForRedirectHome } from '../actions'
+
 
 class AddPost extends React.Component {
 
@@ -43,55 +43,60 @@ class AddPost extends React.Component {
   }
 
   render() {
-    const { categories, createPost, redirect } = this.props
-    const { title, body, author } = this.state
-    return (
-      <div>
-        <p className="text-capitalize small">
-          <Link to="/">Home</Link>
-          <span className="mx-2">/</span>
-          Add Post
-        </p>
-        <h1 className="my-4">Add Post</h1>
-        <form className="col-6 offset-3" onSubmit={event => {
-          event.preventDefault()
-          createPost(this.state)
-          redirect()
-        }}>
-          <div className="form-group">
-            <label for="category">Category</label>
-            <select id="category" className="form-control" onChange={(event) => this.handleCategoryChange(event.target.value)}>
-                <option value="" selected="selected">Pick category&hellip;</option>
-              {categories.map(category => (
-                  <option key={category.name} value={category.name}>{category.name}</option>
-                ))
-              }
-            </select>
-          </div>
-          <div className="form-group">
-            <label for="title" className="form-label">Title</label>
-            <input className="form-control" type="text" value={title} id="title" name="title" onChange={(event) => this.handleTitleChange(event.target.value)} />
-          </div>
-          <div className="form-group">
-            <label for="body" className="form-label">Body</label>
-            <textarea className="form-control" value={body} id="body" name="body" rows="3" onChange={(event) => this.handleBodyChange(event.target.value)}></textarea>
-          </div>
-          <div className="form-group">
-            <label for="author" className="form-label">Author</label>
-            <input className="form-control" type="text" value={author} id="author" name="author" onChange={(event) => this.handleAuthorChange(event.target.value)} />
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
-      </div>
-    )
+    const { categories, createPost } = this.props
+    const { title, body, author, readyForRedirectHome } = this.state
+    if(readyForRedirectHome) {
+      return (
+        <Redirect to='/' />
+      )
+    } else {
+      return (
+        <div>
+          <p className="text-capitalize small">
+            <Link to="/">Home</Link>
+            <span className="mx-2">/</span>
+            Add Post
+          </p>
+          <h1 className="my-4">Add Post</h1>
+          <form className="col-6 offset-3" onSubmit={event => {
+            event.preventDefault()
+            createPost(this.state)
+          }}>
+            <div className="form-group">
+              <label for="category">Category</label>
+              <select id="category" className="form-control" onChange={(event) => this.handleCategoryChange(event.target.value)}>
+                  <option value="" selected="selected">Pick category&hellip;</option>
+                {categories.map(category => (
+                    <option key={category.name} value={category.name}>{category.name}</option>
+                  ))
+                }
+              </select>
+            </div>
+            <div className="form-group">
+              <label for="title" className="form-label">Title</label>
+              <input className="form-control" type="text" value={title} id="title" name="title" onChange={(event) => this.handleTitleChange(event.target.value)} />
+            </div>
+            <div className="form-group">
+              <label for="body" className="form-label">Body</label>
+              <textarea className="form-control" value={body} id="body" name="body" rows="3" onChange={(event) => this.handleBodyChange(event.target.value)}></textarea>
+            </div>
+            <div className="form-group">
+              <label for="author" className="form-label">Author</label>
+              <input className="form-control" type="text" value={author} id="author" name="author" onChange={(event) => this.handleAuthorChange(event.target.value)} />
+            </div>
+            <button type="submit" className="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      )
+    }
   }
 }
 
 AddPost.PropTypes = {
   fetchCategories: PropTypes.func.isRequired,
   createPost: PropTypes.func.isRequired,
-  redirect: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
+  readyForRedirectHome: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -101,8 +106,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchCategories: () => dispatch(categoriesFetchData()),
   createPost: (post) => dispatch(addPost(post)),
-  redirect: () => dispatch(push('/')),
-
 })
 
 export default withRouter(

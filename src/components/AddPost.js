@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter, Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { categoriesFetchData, addPost, readyForRedirectHome } from '../actions'
+import { categoriesFetchData, addPost } from '../actions'
 
 
 class AddPost extends React.Component {
@@ -17,6 +17,7 @@ class AddPost extends React.Component {
   }
 
   componentDidMount() {
+    console.log(">>>>>>>>> ADD POST PROPS ", this.props)
     this.props.fetchCategories()
   }
 
@@ -43,8 +44,8 @@ class AddPost extends React.Component {
   }
 
   render() {
-    const { categories, createPost } = this.props
-    const { title, body, author, readyForRedirectHome } = this.state
+    const { categories, createPost, readyForRedirectHome } = this.props
+    const { title, body, author } = this.state
     if(readyForRedirectHome) {
       return (
         <Redirect to='/' />
@@ -101,6 +102,7 @@ AddPost.PropTypes = {
 
 const mapStateToProps = (state) => ({
   categories: state.categories,
+  readyForRedirectHome: state.readyForRedirectHome,
 })
 
 const mapDispatchToProps = (dispatch) => ({

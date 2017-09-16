@@ -2,17 +2,49 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { categoriesFetchData } from '../actions'
+import { categoriesFetchData, addPost } from '../actions'
+import { push } from 'react-router-redux'
 
 class AddPost extends React.Component {
 
+  state = {
+    title: "",
+    author: "",
+    body: "",
+    category: "",
+    timestamp: Date.now(),
+    id: this.generateUUID(),
+  }
+
   componentDidMount() {
     this.props.fetchCategories()
-    console.log(">>>>>>>>> ADDPOST PROPS ", this.props)
+  }
+
+  generateUUID() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    )
+  }
+
+  handleTitleChange(titleInput) {
+    this.setState({title: titleInput})
+  }
+
+  handleBodyChange(bodyInput) {
+    this.setState({body: bodyInput})
+  }
+
+  handleAuthorChange(authorInput) {
+    this.setState({author: authorInput})
+  }
+
+  handleCategoryChange(categorySelect) {
+    this.setState({category: categorySelect})
   }
 
   render() {
-    const { categories } = this.props
+    const { categories, createPost, redirect } = this.props
+    const { title, body, author } = this.state
     return (
       <div>
         <p className="text-capitalize small">
@@ -21,13 +53,35 @@ class AddPost extends React.Component {
           Add Post
         </p>
         <h1 className="my-4">Add Post</h1>
-        <select>
-          <option value="none" disabled>Select category&hellip;</option>
-          {categories.map(category => (
-              <option value={category.name}>{category.name}</option>
-            ))
-          }
-        </select>
+        <form className="col-6 offset-3" onSubmit={event => {
+          event.preventDefault()
+          createPost(this.state)
+          redirect()
+        }}>
+          <div className="form-group">
+            <label for="category">Category</label>
+            <select id="category" className="form-control" onChange={(event) => this.handleCategoryChange(event.target.value)}>
+                <option value="" selected="selected">Pick category&hellip;</option>
+              {categories.map(category => (
+                  <option key={category.name} value={category.name}>{category.name}</option>
+                ))
+              }
+            </select>
+          </div>
+          <div className="form-group">
+            <label for="title" className="form-label">Title</label>
+            <input className="form-control" type="text" value={title} id="title" name="title" onChange={(event) => this.handleTitleChange(event.target.value)} />
+          </div>
+          <div className="form-group">
+            <label for="body" className="form-label">Body</label>
+            <textarea className="form-control" value={body} id="body" name="body" rows="3" onChange={(event) => this.handleBodyChange(event.target.value)}></textarea>
+          </div>
+          <div className="form-group">
+            <label for="author" className="form-label">Author</label>
+            <input className="form-control" type="text" value={author} id="author" name="author" onChange={(event) => this.handleAuthorChange(event.target.value)} />
+          </div>
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </form>
       </div>
     )
   }
@@ -35,6 +89,8 @@ class AddPost extends React.Component {
 
 AddPost.PropTypes = {
   fetchCategories: PropTypes.func.isRequired,
+  createPost: PropTypes.func.isRequired,
+  redirect: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
 }
 
@@ -43,7 +99,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchCategories: () => dispatch(categoriesFetchData())
+  fetchCategories: () => dispatch(categoriesFetchData()),
+  createPost: (post) => dispatch(addPost(post)),
+  redirect: () => dispatch(push('/')),
+
 })
 
 export default withRouter(

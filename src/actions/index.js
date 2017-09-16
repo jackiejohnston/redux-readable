@@ -225,3 +225,27 @@ export function deleteComment(comment) {
       .catch((response) => console.log("Error deleting comment comment", response.statusText))
   }
 }
+
+
+// POST /posts
+//  Add a new post.
+// d - UUID should be fine, but any unique id will work
+// timestamp - [Timestamp] Can in whatever format you like, you can use Date.now() if you like.
+// title - [String]
+// body - [String]
+// author - [String]
+// category - Any of the categories listed in categories.js. Feel free to extend this list as you desire.
+
+export function addPost(post) {
+  return (dispatch) => {
+    fetch(`${api}/posts`, { headers, method: 'POST', body: JSON.stringify(post) })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then(() => {return dispatch(postsFetchData())})
+      .catch((response) => console.log("Error deleting comment comment", response.statusText))
+  }
+}

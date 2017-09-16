@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { routerReducer } from 'react-router-redux'
 
 // GET /categories
 // Get all of the categories available for the app.
@@ -129,6 +130,7 @@ export function comments(state = [], action) {
 
 
 const rootReducer = combineReducers({
+  router: routerReducer,
   categories,
   fetchCategoriesHasError,
   fetchCategoriesIsLoading,

@@ -17,7 +17,7 @@ class AddPost extends React.Component {
   }
 
   componentDidMount() {
-    console.log(">>>>>>>>> ADD POST PROPS ", this.props)
+    // console.log(">>>>>>>>> ADD POST PROPS ", this.props)
     this.props.fetchCategories()
   }
 
@@ -64,9 +64,9 @@ class AddPost extends React.Component {
             createPost(this.state)
           }}>
             <div className="form-group">
-              <label for="category">Category</label>
-              <select id="category" className="form-control" onChange={(event) => this.handleCategoryChange(event.target.value)}>
-                  <option value="" selected="selected">Pick category&hellip;</option>
+              <label htmlFor="category">Category</label>
+              <select id="category" className="form-control" defaultValue="" onChange={(event) => this.handleCategoryChange(event.target.value)}>
+                  <option value="">Pick category&hellip;</option>
                 {categories.map(category => (
                     <option key={category.name} value={category.name}>{category.name}</option>
                   ))
@@ -74,15 +74,15 @@ class AddPost extends React.Component {
               </select>
             </div>
             <div className="form-group">
-              <label for="title" className="form-label">Title</label>
+              <label htmlFor="title" className="form-label">Title</label>
               <input className="form-control" type="text" value={title} id="title" name="title" onChange={(event) => this.handleTitleChange(event.target.value)} />
             </div>
             <div className="form-group">
-              <label for="body" className="form-label">Body</label>
+              <label htmlFor="body" className="form-label">Body</label>
               <textarea className="form-control" value={body} id="body" name="body" rows="3" onChange={(event) => this.handleBodyChange(event.target.value)}></textarea>
             </div>
             <div className="form-group">
-              <label for="author" className="form-label">Author</label>
+              <label htmlFor="author" className="form-label">Author</label>
               <input className="form-control" type="text" value={author} id="author" name="author" onChange={(event) => this.handleAuthorChange(event.target.value)} />
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>

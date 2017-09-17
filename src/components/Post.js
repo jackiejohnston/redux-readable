@@ -93,7 +93,7 @@ class Post extends React.Component {
                   </dd>
                 </div>
               )}
-              <button className="btn btn-link">Add comment</button>
+              <Link to={`/add-comment/${post.id}`}>Add comment</Link>
             </dl>
           </dd>
         </div>
@@ -109,7 +109,7 @@ Post.PropTypes = {
   voteForComment: PropTypes.func.isRequired,
   fetchComments: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
-  comments: PropTypes.array.isRequiredqw
+  comments: PropTypes.array.isRequired
 }
 
 const mapStateToProps = (state) => ({

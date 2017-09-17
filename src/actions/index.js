@@ -254,6 +254,29 @@ export function addPost(post) {
         return response
       })
       .then(() => dispatch(readyForRedirectHome(true)))
-      .catch((response) => console.log("Error deleting comment comment", response.statusText))
+      .catch((response) => console.log("Error adding post", response.statusText))
+  }
+}
+
+
+// POST /comments
+// Add a comment to a post.
+// Add a comment to a post. id - Any unique ID. As with posts, UUID is probably the best here.
+// timestamp - [Timestamp] Get this however you want.
+// body - [String]
+// author - [String]
+// parentId - Should match a post id in the database.
+
+export function addComment(comment) {
+  return (dispatch) => {
+    fetch(`${api}/comments`, { headers, method: 'POST', body: JSON.stringify(comment) })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then(() => dispatch(readyForRedirectHome(true)))
+      .catch((response) => console.log("Error adding comment", response.statusText))
   }
 }

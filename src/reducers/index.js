@@ -90,6 +90,11 @@ export function comments(state = [], action) {
       } else {
         return action.comments
       }
+    case 'UPDATE_COMMENT_AS_DELETED':
+      let updatedComments = action.comments.map(
+          (comment) => comment.id === action.comment.id ? {...comment, deleted: true} : comment
+        )
+      return updatedComments
     default:
       return state
   }
@@ -140,6 +145,23 @@ export function postSortByScoreDesc(state = [], action) {
 }
 
 
+// export function updateCommentAsDeleted(state = {}, action) {
+//   switch(action.type) {
+//     case 'UPDATE_COMMENT_AS_DELETED':
+//       console.log(">>>>>>>>>REDUCER ACTION", action)
+//       console.log(">>>>>>>>>REDUCER STATE", state)
+//       return {
+//         ...state,
+//         comments: action.comments.map(
+//           (comment) => comment.id === action.comment.id ? {...comment, deleted: true} : comment
+//         )
+//       }
+//     default:
+//       return state
+//   }
+// }
+
+
 const rootReducer = combineReducers({
   categories,
   fetchCategoriesHasError,
@@ -151,7 +173,7 @@ const rootReducer = combineReducers({
   fetchCommentsHasError,
   fetchCommentsIsLoading,
   readyForRedirectHome,
-  postSortByScoreDesc,
+  postSortByScoreDesc
 })
 
 export default rootReducer

@@ -6,6 +6,8 @@ const headers = {
   'Content-Type': 'application/json',
 }
 
+
+// TODO: Not successful with refresh after sort
 // Sorting functions
 
 export function postSortByScoreDesc(posts){
@@ -133,7 +135,7 @@ export function fetchCommentsHasSuccess(comments) {
 }
 
 export function commentsFetchData(post_id) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(fetchCommentsIsLoading(true))
     fetch(`${api}/posts/${post_id}/comments`, { headers })
       .then((response) => {
@@ -210,8 +212,16 @@ export function deletePost(post) {
 // DELETE /comments/:id
 // Sets a comment's deleted flag to true.
 
+export function updateCommentAsDeleted(comment, comments) {
+  return {
+    type: 'UPDATE_COMMENT_AS_DELETED',
+    comment,
+    comments
+  }
+}
+
 export function deleteComment(comment) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     fetch(`${api}/comments/${comment.id}`, { headers, method: 'DELETE' })
       .then((response) => {
         if (!response.ok) {
@@ -219,9 +229,8 @@ export function deleteComment(comment) {
         }
         return response
       })
-      .then(() => console.log(">>>>>>>>>> comment.parentId:", comment.parentId))
       // TODO Fix bug: This refresh isn't working
-      .then(() => {return dispatch(commentsFetchData(comment.parentId))})
+      .then(() => {return dispatch(updateCommentAsDeleted(comment, getState().comments))})
       .catch((response) => console.log("Error deleting comment comment", response.statusText))
   }
 }

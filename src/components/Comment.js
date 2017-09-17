@@ -33,7 +33,7 @@ class Comment extends React.Component {
           <Link to={{ pathname: '/edit-comment', state: { id: comment.id, body: comment.body } }} className="btn btn-link px-2">
             <i className="fa fa-pencil" aria-hidden="true"></i>
           </Link>
-          <button className="hidden-xs-up btn btn-link px-2" onClick={(event) => trashComment(comment)}>
+          <button className="btn btn-link px-2" onClick={(event) => trashComment(comment)}>
             <i className="fa fa-trash-o" aria-hidden="true"></i>
           </button>
           <br />

@@ -2,19 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter, Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { updatePost } from '../actions'
+import { updateComment } from '../actions'
 
 
-class EditPost extends React.Component {
+class EditComment extends React.Component {
 
   state = {
     id: this.props.location.state.id,
-    title: this.props.location.state.title,
-    body: this.props.location.state.body
-  }
-
-  handleTitleChange(titleInput) {
-    this.setState({title: titleInput})
+    body: this.props.location.state.body,
+    timestamp: Date.now(),
   }
 
   handleBodyChange(bodyInput) {
@@ -22,8 +18,8 @@ class EditPost extends React.Component {
   }
 
   render() {
-    const { editPost, readyForRedirectHome } = this.props
-    const { title, body } = this.state
+    const { editComment, readyForRedirectHome } = this.props
+    const { body } = this.state
     if(readyForRedirectHome) {
       return (
         <Redirect to='/' />
@@ -34,17 +30,13 @@ class EditPost extends React.Component {
           <p className="text-capitalize small">
             <Link to="/">Home</Link>
             <span className="mx-2">/</span>
-            Edit Post
+            Edit Comment
           </p>
-          <h1 className="my-4">Edit Post</h1>
+          <h1 className="my-4">Edit Comment</h1>
           <form className="col-6 offset-3" onSubmit={event => {
             event.preventDefault()
-            editPost(this.state)
+            editComment(this.state)
           }}>
-            <div className="form-group">
-              <label htmlFor="title" className="form-label">Title</label>
-              <input className="form-control" type="text" value={title} id="title" name="title" onChange={(event) => this.handleTitleChange(event.target.value)} />
-            </div>
             <div className="form-group">
               <label htmlFor="body" className="form-label">Body</label>
               <textarea className="form-control" value={body} id="body" name="body" rows="3" onChange={(event) => this.handleBodyChange(event.target.value)}></textarea>
@@ -57,8 +49,8 @@ class EditPost extends React.Component {
   }
 }
 
-EditPost.PropTypes = {
-  editPost: PropTypes.func.isRequired,
+EditComment.PropTypes = {
+  editComment: PropTypes.func.isRequired,
   readyForRedirectHome: PropTypes.bool.isRequired
 }
 
@@ -67,12 +59,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  editPost: (post) => dispatch(updatePost(post)),
+  editComment: (comment) => dispatch(updateComment(comment)),
 })
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(EditPost)
+  )(EditComment)
 )

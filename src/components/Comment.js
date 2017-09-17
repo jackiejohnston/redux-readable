@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Moment from 'react-moment'
+import { Link } from 'react-router-dom'
 import { voteOnComment, deleteComment } from '../actions'
 
 class Comment extends React.Component {
@@ -29,9 +30,9 @@ class Comment extends React.Component {
           <span>
             {comment.body}
           </span>
-          <button className="btn btn-link px-2">
+          <Link to={{ pathname: '/edit-comment', state: { id: comment.id, body: comment.body } }} className="btn btn-link px-2">
             <i className="fa fa-pencil" aria-hidden="true"></i>
-          </button>
+          </Link>
           <button className="hidden-xs-up btn btn-link px-2" onClick={(event) => trashComment(comment)}>
             <i className="fa fa-trash-o" aria-hidden="true"></i>
           </button>

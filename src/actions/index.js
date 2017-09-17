@@ -300,3 +300,23 @@ export function updatePost(post) {
       .catch((response) => console.log("Error updating post", response.statusText))
   }
 }
+
+
+// PUT /comments/:id
+// Edit the details of an existing comment.
+// timestamp - timestamp. Get this however you want.
+// body - [String]
+
+export function updateComment(comment) {
+  return (dispatch) => {
+    fetch(`${api}/comments/${comment.id}`, { headers, method: 'PUT', body: JSON.stringify({"body": comment.body, "timestamp": comment.timestamp}) })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then(() => dispatch(readyForRedirectHome(true)))
+      .catch((response) => console.log("Error updating comment", response.statusText))
+  }
+}

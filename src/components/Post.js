@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { withRouter, Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment'
-import { commentsFetchData, voteOnPost, voteOnComment, deleteComment, deletePost } from '../actions'
+import { commentsFetchData, voteOnPost, deletePost } from '../actions'
+import Comment from './Comment'
 
 class Post extends React.Component {
 
@@ -14,7 +15,7 @@ class Post extends React.Component {
   }
 
   render() {
-    const { post, comments, voteForPost, voteForComment, trashComment, trashPost } = this.props
+    const { post, comments, voteForPost, trashPost } = this.props
     const { path } = this.props.match
     if(post.deleted) {
       return (
@@ -48,7 +49,7 @@ class Post extends React.Component {
             <span className="badge badge-pill badge-warning ml-1 align-middle mb-1 text-uppercase">
               {comments.filter(comment=>comment.parentId === post.id && comment.deleted === false).length} comments
             </span>
-            <button className="btn btn-link px-2">
+            <button className="hidden-xs-up btn btn-link px-2">
               <i className="fa fa-pencil" aria-hidden="true"></i>
             </button>
             <button className="btn btn-link px-2" onClick={(event) => trashPost(post)}>
@@ -64,34 +65,7 @@ class Post extends React.Component {
             </small>
             <dl className="mt-4">
               {comments.filter(comment=>comment.parentId === post.id && comment.deleted === false).map((comment, i) =>
-                <div key={i} className="row mb-4">
-                  <dt className="col-sm-4 col-md-3 text-center text-nowrap">
-                    <button className="btn btn-link px-2" onClick={(event) => voteForComment(comment,"upVote")}>
-                      <i className="fa fa-arrow-circle-up" aria-hidden="true"></i>
-                    </button>
-                    <span className="text-uppercase small">
-                      {comment.voteScore} votes
-                    </span>
-                    <button className="btn btn-link px-2" onClick={(event) => voteForComment(comment,"downVote")}>
-                      <i className="fa fa-arrow-circle-down" aria-hidden="true"></i>
-                    </button>
-                  </dt>
-                  <dd className="col-sm-8 col-md-9">
-                    <span>
-                      {comment.body}
-                    </span>
-                    <button className="btn btn-link px-2">
-                      <i className="fa fa-pencil" aria-hidden="true"></i>
-                    </button>
-                    <button className="btn btn-link px-2" onClick={(event) => trashComment(comment)}>
-                      <i className="fa fa-trash-o" aria-hidden="true"></i>
-                    </button>
-                    <br />
-                    <small className="text-muted text-uppercase">
-                      Submitted by <strong>{comment.author}</strong> on <Moment format="MM/DD/YYYY">{comment.timestamp}</Moment>
-                    </small>
-                  </dd>
-                </div>
+                <Comment key={comment.id} comment={comment} />
               )}
               <Link to={`/add-comment/${post.id}`}>Add comment</Link>
             </dl>
@@ -103,10 +77,8 @@ class Post extends React.Component {
 }
 
 Post.PropTypes = {
-  trashComment: PropTypes.func.isRequired,
   trashPost: PropTypes.func.isRequired,
   voteForPost: PropTypes.func.isRequired,
-  voteForComment: PropTypes.func.isRequired,
   fetchComments: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
   comments: PropTypes.array.isRequired
@@ -119,8 +91,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchComments: (data) => dispatch(commentsFetchData(data)),
   voteForPost: (post,voteOption) => dispatch(voteOnPost(post,voteOption)),
-  voteForComment: (comment,voteOption) => dispatch(voteOnComment(comment,voteOption)),
-  trashComment: (comment) => dispatch(deleteComment(comment)),
   trashPost: (post) => dispatch(deletePost(post))
 })
 

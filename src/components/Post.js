@@ -49,9 +49,9 @@ class Post extends React.Component {
             <span className="badge badge-pill badge-warning ml-1 align-middle mb-1 text-uppercase">
               {comments.filter(comment=>comment.parentId === post.id && comment.deleted === false).length} comments
             </span>
-            <button className="hidden-xs-up btn btn-link px-2">
+            <Link to={{ pathname: '/edit-post', state: { id: post.id, title: post.title, body: post.body } }} className="btn btn-link px-2">
               <i className="fa fa-pencil" aria-hidden="true"></i>
-            </button>
+            </Link>
             <button className="btn btn-link px-2" onClick={(event) => trashPost(post)}>
               <i className="fa fa-trash-o" aria-hidden="true"></i>
             </button>

@@ -280,3 +280,23 @@ export function addComment(comment) {
       .catch((response) => console.log("Error adding comment", response.statusText))
   }
 }
+
+
+// PUT /posts/:id
+// Edit the details of an existing post.
+// title - [String]
+// body - [String]
+
+export function updatePost(post) {
+  return (dispatch) => {
+    fetch(`${api}/posts/${post.id}`, { headers, method: 'PUT', body: JSON.stringify({"body": post.body, "title": post.title}) })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText)
+        }
+        return response
+      })
+      .then(() => dispatch(readyForRedirectHome(true)))
+      .catch((response) => console.log("Error updating post", response.statusText))
+  }
+}

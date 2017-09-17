@@ -8,6 +8,7 @@ import Home from './Home'
 import Category from './Category'
 import Detail from './Detail'
 import AddPost from './AddPost'
+import EditPost from './EditPost'
 import AddComment from './AddComment'
 
 class App extends React.Component {
@@ -30,6 +31,7 @@ class App extends React.Component {
               <Switch>
                 <Route exact path='/' component={Home} />
                 <Route exact path="/add-post" component={AddPost} />
+                <Route exact path="/edit-post" component={EditPost} />
                 <Route exact path="/add-comment/:post_id" component={AddComment} />
                 <Route exact path="/:category" component={Category} />
                 <Route exact path="/:category/:post_id" component={Detail} />

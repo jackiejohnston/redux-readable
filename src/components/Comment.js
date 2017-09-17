@@ -29,7 +29,7 @@ class Comment extends React.Component {
           <span>
             {comment.body}
           </span>
-          <button className="hidden-xs-up btn btn-link px-2">
+          <button className="btn btn-link px-2">
             <i className="fa fa-pencil" aria-hidden="true"></i>
           </button>
           <button className="hidden-xs-up btn btn-link px-2" onClick={(event) => trashComment(comment)}>

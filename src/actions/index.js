@@ -8,12 +8,12 @@ const headers = {
 
 // Sorting functions
 
-// export function postSortByScoreDesc(posts){
-//   return {
-//     type: 'POST_SORT_BY_SCORE_DESC',
-//     posts
-//   }
-// }
+export function postSortByScoreDesc(posts){
+  return {
+    type: 'POST_SORT_BY_SCORE_DESC',
+    posts
+  }
+}
 
 
 // export function sortByScoreAndRefresh(posts) {

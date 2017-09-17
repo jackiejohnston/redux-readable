@@ -108,34 +108,36 @@ export function readyForRedirectHome(state = false, action) {
 // Sorting functions
 
 // function sortByTimeAsc(a, b){
-//   var aTime = a.timestamp;
-//   var bTime = b.timestamp;
+//   let aTime = a.timestamp;
+//   let bTime = b.timestamp;
 //   return ((aTime < bTime) ? -1 : ((aTime > bTime) ? 1 : 0));
 // }
 // function sortByTimeDesc(a, b){
-//   var aTime = a.timestamp;
-//   var bTime = b.timestamp;
+//   let aTime = a.timestamp;
+//   let bTime = b.timestamp;
 //   return ((aTime > bTime) ? -1 : ((aTime < bTime) ? 1 : 0));
 // }
 // function sortByScoreAsc(a, b){
-//   var aScore = a.voteScore;
-//   var bScore = b.voteScore;
+//   let aScore = a.voteScore;
+//   let bScore = b.voteScore;
 //   return ((aScore < bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
 // }
-// function sortByScoreDesc(a, b){
-//   var aScore = a.voteScore;
-//   var bScore = b.voteScore;
-//   return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
-// }
+export function sortByScoreDesc(a, b){
+  let aScore = a.voteScore;
+  let bScore = b.voteScore;
+  return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
+}
 
-// export function postSortByScoreDesc(state = [], action) {
-//   switch(action.type) {
-//     case 'POST_SORT_BY_SCORE_DESC':
-//       return action.posts.sort(sortByScoreDesc)
-//     default:
-//       return state
-//   }
-// }
+export function postSortByScoreDesc(state = [], action) {
+  switch(action.type) {
+    case 'POST_SORT_BY_SCORE_DESC':
+      const sortedPosts = action.posts.sort(sortByScoreDesc)
+      console.log(sortedPosts)
+      return sortedPosts
+    default:
+      return state
+  }
+}
 
 
 const rootReducer = combineReducers({
@@ -149,7 +151,7 @@ const rootReducer = combineReducers({
   fetchCommentsHasError,
   fetchCommentsIsLoading,
   readyForRedirectHome,
-  // postSortByScoreDesc,
+  postSortByScoreDesc,
 })
 
 export default rootReducer

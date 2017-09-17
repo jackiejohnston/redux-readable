@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { postsFetchData, readyForRedirectHome, postSortByScoreDesc } from '../actions'
+import { postsFetchData, readyForRedirectHome } from '../actions'
 import Post from './Post'
+import SortLinks from './SortLinks'
 
 class Home extends React.Component {
 
@@ -14,11 +15,11 @@ class Home extends React.Component {
   }
 
   render() {
-    const { posts, sortScoreHighestFirst } = this.props
+    const { posts } = this.props
     return (
       <div>
-        <button className="hidden-xs-up" onClick={(event) => sortScoreHighestFirst(posts)}>Sort</button>
         <p className="small">Home</p>
+        <SortLinks post={posts} />
         <h1 className="my-4">All Posts</h1>
         <dl>
         {posts.filter(post=>post.deleted === false).map((post, i) =>
@@ -31,7 +32,6 @@ class Home extends React.Component {
 }
 
 Home.PropTypes = {
-  sortScoreHighestFirst: PropTypes.func.isRequired,
   resetRedirect: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired,
@@ -44,7 +44,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchPosts: () => dispatch(postsFetchData()),
   resetRedirect: () => dispatch(readyForRedirectHome(false)),
-  sortScoreHighestFirst: (posts) => dispatch(postSortByScoreDesc(posts))
 })
 
 export default withRouter(

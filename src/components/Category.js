@@ -4,6 +4,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { postsFetchData } from '../actions'
 import Post from './Post'
+import SortLinks from './SortLinks'
 
 class Category extends React.Component {
 
@@ -22,6 +23,7 @@ class Category extends React.Component {
           <span className="mx-2">/</span>
           {category}
         </p>
+        <SortLinks post={posts} />
         <h1 className="my-4 text-capitalize">{category} Posts</h1>
         <dl>
         {posts.filter(post=>post.deleted === false && post.category === category).map((post) =>

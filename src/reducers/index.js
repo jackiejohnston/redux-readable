@@ -30,6 +30,32 @@ export function categories(state = [], action) {
   }
 }
 
+// Sorting functions
+
+export function sortByTimeAsc(a, b){
+  let aTime = a.timestamp;
+  let bTime = b.timestamp;
+  return ((aTime < bTime) ? -1 : ((aTime > bTime) ? 1 : 0));
+}
+
+export function sortByTimeDesc(a, b){
+  let aTime = a.timestamp;
+  let bTime = b.timestamp;
+  return ((aTime > bTime) ? -1 : ((aTime < bTime) ? 1 : 0));
+}
+
+export function sortByScoreAsc(a, b){
+  let aScore = a.voteScore;
+  let bScore = b.voteScore;
+  return ((aScore < bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
+}
+
+export function sortByScoreDesc(a, b){
+  let aScore = a.voteScore;
+  let bScore = b.voteScore;
+  return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
+}
+
 // GET /posts
 // Get all of the posts. Useful for the main page when no category is selected.
 
@@ -55,6 +81,18 @@ export function posts(state = [], action) {
   switch(action.type) {
     case 'FETCH_POSTS_HAS_SUCCESS':
       return action.posts
+    case 'POST_SORT_BY_SCORE_DESC':
+      const postsByScoreDesc = action.posts.sort(sortByScoreDesc)
+      return postsByScoreDesc
+    case 'POST_SORT_BY_SCORE_ASC':
+      const postsByScoreAsc = action.posts.sort(sortByScoreAsc)
+      return postsByScoreAsc
+    case 'POST_SORT_BY_TIME_DESC':
+      const postsByTimeDesc = action.posts.sort(sortByTimeDesc)
+      return postsByTimeDesc
+    case 'POST_SORT_BY_TIME_ASC':
+      const postsByTimeAsc = action.posts.sort(sortByTimeAsc)
+      return postsByTimeAsc
     default:
       return state
   }
@@ -91,7 +129,7 @@ export function comments(state = [], action) {
         return action.comments
       }
     case 'UPDATE_COMMENT_AS_DELETED':
-      let updatedComments = action.comments.map(
+      const updatedComments = action.comments.map(
           (comment) => comment.id === action.comment.id ? {...comment, deleted: true} : comment
         )
       return updatedComments
@@ -110,57 +148,6 @@ export function readyForRedirectHome(state = false, action) {
   }
 }
 
-// Sorting functions
-
-// function sortByTimeAsc(a, b){
-//   let aTime = a.timestamp;
-//   let bTime = b.timestamp;
-//   return ((aTime < bTime) ? -1 : ((aTime > bTime) ? 1 : 0));
-// }
-// function sortByTimeDesc(a, b){
-//   let aTime = a.timestamp;
-//   let bTime = b.timestamp;
-//   return ((aTime > bTime) ? -1 : ((aTime < bTime) ? 1 : 0));
-// }
-// function sortByScoreAsc(a, b){
-//   let aScore = a.voteScore;
-//   let bScore = b.voteScore;
-//   return ((aScore < bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
-// }
-export function sortByScoreDesc(a, b){
-  let aScore = a.voteScore;
-  let bScore = b.voteScore;
-  return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
-}
-
-export function postSortByScoreDesc(state = [], action) {
-  switch(action.type) {
-    case 'POST_SORT_BY_SCORE_DESC':
-      const sortedPosts = action.posts.sort(sortByScoreDesc)
-      console.log(sortedPosts)
-      return sortedPosts
-    default:
-      return state
-  }
-}
-
-
-// export function updateCommentAsDeleted(state = {}, action) {
-//   switch(action.type) {
-//     case 'UPDATE_COMMENT_AS_DELETED':
-//       console.log(">>>>>>>>>REDUCER ACTION", action)
-//       console.log(">>>>>>>>>REDUCER STATE", state)
-//       return {
-//         ...state,
-//         comments: action.comments.map(
-//           (comment) => comment.id === action.comment.id ? {...comment, deleted: true} : comment
-//         )
-//       }
-//     default:
-//       return state
-//   }
-// }
-
 
 const rootReducer = combineReducers({
   categories,
@@ -172,8 +159,7 @@ const rootReducer = combineReducers({
   comments,
   fetchCommentsHasError,
   fetchCommentsIsLoading,
-  readyForRedirectHome,
-  postSortByScoreDesc
+  readyForRedirectHome
 })
 
 export default rootReducer

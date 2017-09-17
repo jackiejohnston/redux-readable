@@ -7,7 +7,6 @@ const headers = {
 }
 
 
-// TODO: Not successful with refresh after sort
 // Sorting functions
 
 export function postSortByScoreDesc(posts){
@@ -17,12 +16,26 @@ export function postSortByScoreDesc(posts){
   }
 }
 
+export function postSortByScoreAsc(posts){
+  return {
+    type: 'POST_SORT_BY_SCORE_ASC',
+    posts
+  }
+}
 
-// export function sortByScoreAndRefresh(posts) {
-//   return (dispatch) => {
-//     postSortByScoreDesc(posts).then(() => {return dispatch(postsFetchData())})
-//   }
-// }
+export function postSortByTimeDesc(posts){
+  return {
+    type: 'POST_SORT_BY_TIME_DESC',
+    posts
+  }
+}
+
+export function postSortByTimeAsc(posts){
+  return {
+    type: 'POST_SORT_BY_TIME_ASC',
+    posts
+  }
+}
 
 // GET /categories
 // Get all of the categories available for the app.
@@ -229,7 +242,6 @@ export function deleteComment(comment) {
         }
         return response
       })
-      // TODO Fix bug: This refresh isn't working
       .then(() => {return dispatch(updateCommentAsDeleted(comment, getState().comments))})
       .catch((response) => console.log("Error deleting comment comment", response.statusText))
   }

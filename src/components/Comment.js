@@ -7,10 +7,6 @@ import { voteOnComment, deleteComment } from '../actions'
 
 class Comment extends React.Component {
 
-  componentDidMount() {
-    // console.log(">>>>>>>>> COMMENT PROPS ", this.props)
-  }
-
   render() {
     const { comment, voteForComment, trashComment } = this.props
     return (

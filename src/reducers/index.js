@@ -30,32 +30,6 @@ export function categories(state = [], action) {
   }
 }
 
-// Sorting functions
-
-export function sortByTimeAsc(a, b){
-  let aTime = a.timestamp;
-  let bTime = b.timestamp;
-  return ((aTime < bTime) ? -1 : ((aTime > bTime) ? 1 : 0));
-}
-
-export function sortByTimeDesc(a, b){
-  let aTime = a.timestamp;
-  let bTime = b.timestamp;
-  return ((aTime > bTime) ? -1 : ((aTime < bTime) ? 1 : 0));
-}
-
-export function sortByScoreAsc(a, b){
-  let aScore = a.voteScore;
-  let bScore = b.voteScore;
-  return ((aScore < bScore) ? -1 : ((aScore > bScore) ? 1 : 0));
-}
-
-export function sortByScoreDesc(a, b){
-  let aScore = a.voteScore;
-  let bScore = b.voteScore;
-  return ((aScore > bScore) ? -1 : ((aScore < bScore) ? 1 : 0));
-}
-
 // GET /posts
 // Get all of the posts. Useful for the main page when no category is selected.
 
@@ -81,18 +55,15 @@ export function posts(state = [], action) {
   switch(action.type) {
     case 'FETCH_POSTS_HAS_SUCCESS':
       return action.posts
-    case 'POST_SORT_BY_SCORE_DESC':
-      const postsByScoreDesc = action.posts.sort(sortByScoreDesc)
-      return postsByScoreDesc
-    case 'POST_SORT_BY_SCORE_ASC':
-      const postsByScoreAsc = action.posts.sort(sortByScoreAsc)
-      return postsByScoreAsc
-    case 'POST_SORT_BY_TIME_DESC':
-      const postsByTimeDesc = action.posts.sort(sortByTimeDesc)
-      return postsByTimeDesc
-    case 'POST_SORT_BY_TIME_ASC':
-      const postsByTimeAsc = action.posts.sort(sortByTimeAsc)
-      return postsByTimeAsc
+    default:
+      return state
+  }
+}
+
+export function sortBy(state = "timeDesc", action) {
+  switch(action.type) {
+    case 'SORT_BY':
+      return action.sort_by
     default:
       return state
   }
@@ -159,7 +130,8 @@ const rootReducer = combineReducers({
   comments,
   fetchCommentsHasError,
   fetchCommentsIsLoading,
-  readyForRedirectHome
+  readyForRedirectHome,
+  sortBy
 })
 
 export default rootReducer

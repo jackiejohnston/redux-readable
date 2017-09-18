@@ -9,7 +9,6 @@ import Comment from './Comment'
 class Post extends React.Component {
 
   componentDidMount() {
-    // console.log(">>>>>>>>> POST PROPS ", this.props)
     const { fetchComments, post } = this.props
     fetchComments(post.id)
   }

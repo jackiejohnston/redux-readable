@@ -7,33 +7,12 @@ const headers = {
 }
 
 
-// Sorting functions
+// Sort function
 
-export function postSortByScoreDesc(posts){
+export function sortBy(sortType) {
   return {
-    type: 'POST_SORT_BY_SCORE_DESC',
-    posts
-  }
-}
-
-export function postSortByScoreAsc(posts){
-  return {
-    type: 'POST_SORT_BY_SCORE_ASC',
-    posts
-  }
-}
-
-export function postSortByTimeDesc(posts){
-  return {
-    type: 'POST_SORT_BY_TIME_DESC',
-    posts
-  }
-}
-
-export function postSortByTimeAsc(posts){
-  return {
-    type: 'POST_SORT_BY_TIME_ASC',
-    posts
+    type: 'SORT_BY',
+    sort_by: sortType
   }
 }
 

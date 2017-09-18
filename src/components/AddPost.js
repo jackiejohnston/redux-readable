@@ -17,7 +17,6 @@ class AddPost extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(">>>>>>>>> ADD POST PROPS ", this.props)
     this.props.fetchCategories()
   }
 
